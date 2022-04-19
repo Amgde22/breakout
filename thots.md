@@ -2,3 +2,7 @@
 2 unlock it for level 2
 3 make more levels 
 4 style
+
+add move buttons
+add lives
+add win and loose
