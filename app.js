@@ -116,9 +116,15 @@ document.addEventListener("keydown" , moveUser)
 
 moveRight.addEventListener("mousedown" , () => {moveUserButton("right") })
 moveRight.addEventListener("mouseup" , () => {clearInterval(timer)})
+moveRight.addEventListener("touchstart" , () => {moveUserButton("right") })
+moveRight.addEventListener("touchend" , () => {clearInterval(timer)})
+
 
 moveLeft.addEventListener("mousedown" , () => {moveUserButton("left") })
 moveLeft.addEventListener("mouseup" , () => {clearInterval(timer)})
+moveLeft.addEventListener("touchstart" , () => {moveUserButton("left") })
+moveLeft.addEventListener("touchend" , () => {clearInterval(timer)})
+
 
 
 function moveUserButton(direction) {
