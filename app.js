@@ -2,41 +2,75 @@ const grid = document.querySelector(".grid")
 grid.width = 900
 grid.height = 600
 
+const moveLeft = document.querySelector("#moveLeft")
+const moveRight = document.querySelector("#moveRight")
+let timer = null ;
+
+const startButton = document.querySelector("#start")
+startButton.addEventListener("click" , () => {
+    startButton.style.display = "none"
+    moveBallTimer = setInterval( moveBall , 15)})
+let moveBallTimer = null
+
+
+
+
 let xDirection = 4
 let yDirection = 4
 let timeId = null;
 
 class block {
-    constructor(xAxis , yAxis) {
+    constructor(xAxis , yAxis , blockWidth,blockHeight) {
         this.bottomLeft = [xAxis,yAxis]
-        this.bottomRight = [xAxis + 200 , yAxis]
-        this.topLeft = [xAxis , yAxis + 50]
-        this.topRight = [xAxis + 200 , yAxis + 50]
+        this.bottomRight = [xAxis + blockWidth , yAxis]
+        this.topLeft = [xAxis , yAxis + blockHeight]
+        this.topRight = [xAxis + blockWidth , yAxis + blockHeight]
+        this.blockW = blockWidth
 
     }
 
 }
 // all me blocks bruv
 const blocks =[
-    new block(10 , 500) ,
-    new block(220 , 500),
-    new block(430 , 500),
-    new block(640 , 500) ,
-    new block(10 , 430) ,
-    new block(220 , 430),
-    new block(430 , 430),
-    new block(640 , 430) ,
-    new block(10 , 360) ,
-    new block(220 , 360),
-    new block(430 , 360),
-    new block(640 , 360) ,
+    new block(10 + 20 , 500 , 410,50) ,
+ 
+    new block(430 + 20 , 500 , 410,50),
+    
+    new block(10 + 20 , 430 , 200,50) ,
+    new block(220 + 20 , 430 , 200,50),
+    new block(430 + 20 , 430 , 200,50),
+    new block(640 + 20 , 430 , 200,50) ,
+    // tinys
+    new block(10 + 20 , 360 , 127,50) ,
+    new block(30 + 127 + 15, 360 , 127,50) ,
+    new block(30 +(127*2) +30 , 360 , 127,50),
+
+    new block(30 + (127*3) +40  , 360 , 127,50),
+    new block(30 + (127*4) +55 , 360 , 127,50),
+
+    new block(30 + (127*5) +70 , 360 , 127,50) ,
 ]
 
 
 function creatBlock() {
     for(let i = 0; i<blocks.length;i++){
 const block = document.createElement("div")
-block.classList.add("block")
+block.blockWidth = blocks[i].blockW
+        switch(blocks[i].blockW){
+            case 410 :
+                block.classList.add("wideBlock")
+                block.classList.add("block")
+
+                break;
+            case 200 :
+                block.classList.add("block")
+                break ;
+            case 127 :
+                block.classList.add("smallBlock")
+                block.classList.add("block")
+
+                break;
+        }
 block.style.left = blocks[i].bottomLeft[0] + "px"
 block.style.bottom = blocks[i].bottomLeft[1] + "px"
 
@@ -70,27 +104,53 @@ grid.appendChild(userPlatform)
 function moveUser(e){
     switch(e.key){
         case "ArrowLeft" :
-            if(userCurrentPosition[0] > 0){
-            userCurrentPosition[0] -= 35
-            drawUser()
-                if(userCurrentPosition[0] < -4) {
-                    userCurrentPosition[0] += 30
-                    drawUser()
-                }
-            }
+            moveleft()
             break;
         case "ArrowRight" :
-                if(userCurrentPosition[0] < 690){
-                userCurrentPosition[0] += 35
-                drawUser()
-                    
-                }
+              moveright()
             break;
             
-    }
-}
+    }} // end of move user keyboard
+
 document.addEventListener("keydown" , moveUser)
 
+moveRight.addEventListener("mousedown" , () => {moveUserButton("right") })
+moveRight.addEventListener("mouseup" , () => {clearInterval(timer)})
+
+moveLeft.addEventListener("mousedown" , () => {moveUserButton("left") })
+moveLeft.addEventListener("mouseup" , () => {clearInterval(timer)})
+
+
+function moveUserButton(direction) {
+    
+    switch(direction){
+        case "right" : 
+        timer =  setInterval( moveright , 90  )
+        break;
+        case "left" :
+            timer =  setInterval( moveleft , 90  )
+            break;
+    }
+}
+function moveright() {
+   
+
+        if(userCurrentPosition[0] < 690){
+            userCurrentPosition[0] += 35
+            drawUser()
+                
+            }
+}
+function moveleft() {
+    if(userCurrentPosition[0] > 0){
+        userCurrentPosition[0] -= 35
+        drawUser()
+            if(userCurrentPosition[0] < -4) {
+                userCurrentPosition[0] += 30
+                drawUser()
+            }
+        }
+}
 // add ball
 const ballPosition = [ 435 , 50]
 
@@ -107,7 +167,7 @@ function moveBall() {
     drawBall()
     checkForColisions()
 }
-            // setInterval( moveBall , 15) 
+            
 
 //  coli check
  function checkForColisions() {
@@ -121,6 +181,19 @@ for(let i = 0 ; i < blocks.length;i++) {
         ){
         const allBlocks = Array.from(document.querySelectorAll(".block"))
         allBlocks[i].classList.remove("block")
+        switch( allBlocks[i].blockWidth){
+            case 410 :
+                allBlocks[i].classList.remove("wideBlock")
+                allBlocks[i].classList.remove("block")
+                break;
+            case 200 :
+                allBlocks[i].classList.remove("block")
+                break ;
+            case 127 :
+                allBlocks[i].classList.remove("smallBlock")
+                allBlocks[i].classList.remove("block")
+                break;
+        }
         blocks.splice(i,1)
         changePostion()
         }
